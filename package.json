@@ -1,0 +1,9 @@
+{
+  "name": "zoom",
+  "version": "1.0.0",
+  "description": "ff",
+  "main": "index.js",
+  "author": "Hojun Kim <76956067+hojunkim1@users.noreply.github.com>",
+  "license": "MIT",
+  "private": false
+}
