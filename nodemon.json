@@ -1,3 +1,4 @@
 {
-  "exec": "babel-node --presets='@babel/preset-env' -- src/server.js"
+  "ignore": ["/src/public/*"],
+  "exec": "ts-node src/server.ts"
 }
