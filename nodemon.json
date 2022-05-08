@@ -1,0 +1,3 @@
+{
+  "exec": "babel-node --presets='@babel/preset-env' -- src/server.js"
+}
