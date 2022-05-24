@@ -1,4 +1,6 @@
 {
-  "ignore": ["/src/public/*"],
+  "watch": ["src"],
+  "ext": "ts",
+  "ignore": ["src/public/*"],
   "exec": "ts-node src/server.ts"
 }
