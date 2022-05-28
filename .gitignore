@@ -3,6 +3,7 @@
 
 # build
 /dist
+/assets
 
 # macOS
 .DS_Store
