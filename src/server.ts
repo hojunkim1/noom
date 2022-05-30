@@ -22,7 +22,7 @@ wss.on("connection", (socket) => {
   console.log("connected to client");
   socket.on("close", () => console.log("disconnected from client"));
   socket.on("message", (message) => {
-    sockets.forEach((s) => s.send(message.toString("utf-8")));
+    sockets.forEach((socket) => socket.send(message.toString("utf-8")));
   });
 });
 

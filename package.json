@@ -9,7 +9,9 @@
   "private": false,
   "scripts": {
     "dev:server": "nodemon",
-    "dev:client": "webpack"
+    "dev:client": "webpack",
+    "build": "tsc --build",
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "express": "^4.18.1",
