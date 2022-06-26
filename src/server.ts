@@ -16,47 +16,30 @@ const server = createServer(app);
 const io = new Server(server);
 
 io.on("connection", (socket) => {
+  // Log events
   socket.onAny((event) => {
     console.log(`Socket Event: ${event}`);
   });
+
+  // Send welcome message
   socket.on("enter_room", (roomName, done) => {
     socket.join(roomName);
     done();
     socket.to(roomName).emit("welcome");
+  });
+
+  // Send bye message
+  socket.on("disconnecting", () => {
+    socket.rooms.forEach((room) => socket.to(room).emit("bye"));
+  });
+
+  // Send message
+  socket.on("new_message", (msg, room, done) => {
+    socket.to(room).emit("new_message", msg);
+    done();
   });
 });
 
 server.listen(PORT, () =>
   console.log(`Zoom app listening on port: http://localhost:${PORT} 🚀`)
 );
-
-/*
-const wss = new WebSocketServer({ server });
-
-const sockets: WebSocket[] = [];
-
-declare module "ws" {
-  interface WebSocket {
-    nickname: string;
-    new_message: string;
-  }
-}
-
-wss.on("connection", (socket) => {
-  sockets.push(socket);
-  socket["nickname"] = "Anonymous";
-  console.log("connected to client");
-  socket.on("close", () => console.log("disconnected from client"));
-  socket.on("message", (msg) => {
-    const message = JSON.parse(msg.toString());
-    switch (message.type) {
-      case "new_message":
-        sockets.forEach((aSocket) =>
-          aSocket.send(`${socket["nickname"]}: ${message.payload}`)
-        );
-      case "nickname":
-        socket["nickname"] = message.payload;
-    }
-  });
-});
-*/
