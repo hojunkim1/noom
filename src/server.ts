@@ -1,6 +1,6 @@
 import e from "express";
 import { createServer } from "http";
-import { WebSocket, WebSocketServer } from "ws";
+import { Server } from "socket.io";
 
 const app = e();
 const PORT = 3000;
@@ -13,6 +13,17 @@ app.get("/", (req, res) => res.render("home"));
 app.get("/*", (req, res) => res.redirect("/"));
 
 const server = createServer(app);
+const io = new Server(server);
+
+io.on("connection", (socket) => {
+  console.log(socket);
+});
+
+server.listen(PORT, () =>
+  console.log(`Zoom app listening on port: http://localhost:${PORT} 🚀`)
+);
+
+/*
 const wss = new WebSocketServer({ server });
 
 const sockets: WebSocket[] = [];
@@ -41,7 +52,4 @@ wss.on("connection", (socket) => {
     }
   });
 });
-
-server.listen(PORT, () =>
-  console.log(`Zoom app listening on port: http://localhost:${PORT} 🚀`)
-);
+*/
