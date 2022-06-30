@@ -15,28 +15,49 @@ app.get("/*", (req, res) => res.redirect("/"));
 const server = createServer(app);
 const io = new Server(server);
 
+// Type alias
+type Roomname = string;
+type Nickname = string;
+type Message = string;
+type Listener = (...args: any[]) => void;
+
+// Declare socket object
+declare module "socket.io" {
+  interface Socket {
+    nickname: Nickname;
+  }
+}
+
 io.on("connection", (socket) => {
   // Log events
-  socket.onAny((event) => {
+  socket.onAny((event: string) => {
     console.log(`Socket Event: ${event}`);
   });
 
+  // Save nickname
+  socket.on("nickname", (name: Nickname) => {
+    socket["nickname"] = name;
+  });
+
   // Send welcome message
-  socket.on("enter_room", (roomName, done) => {
-    socket.join(roomName);
-    done();
-    socket.to(roomName).emit("welcome");
+  socket.on("enter_room", (room: Roomname, name: Nickname, cb: Listener) => {
+    socket.join(room);
+    name ? (socket["nickname"] = name) : (socket["nickname"] = "Anon");
+    cb();
+    socket.to(room).emit("welcome", socket.nickname);
+  });
+
+  // Send message
+  socket.on("new_message", (room: Roomname, msg: Message, cb: Listener) => {
+    socket.to(room).emit("new_message", `${socket.nickname}: ${msg}`);
+    cb();
   });
 
   // Send bye message
   socket.on("disconnecting", () => {
-    socket.rooms.forEach((room) => socket.to(room).emit("bye"));
-  });
-
-  // Send message
-  socket.on("new_message", (msg, room, done) => {
-    socket.to(room).emit("new_message", msg);
-    done();
+    socket.rooms.forEach((room) =>
+      socket.to(room).emit("bye", socket.nickname)
+    );
   });
 });
 
