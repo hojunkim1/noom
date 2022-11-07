@@ -1,5 +1,5 @@
 {
-  "name": "zoom",
+  "name": "noom",
   "version": "0.1.0",
   "description": "zoom clone with websocket",
   "main": "index.js",

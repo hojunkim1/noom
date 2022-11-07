@@ -1,16 +1,16 @@
-import e from "express";
+import e, { Request, Response } from "express";
 import { createServer } from "http";
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 
 const app = e();
-const PORT = 3000;
+const PORT: number = 3000;
 
 app.set("view engine", "pug");
 app.set("views", process.cwd() + "/src/views");
 app.use("/assets", e.static("assets"));
 
-app.get("/", (req, res) => res.render("home"));
-app.get("/*", (req, res) => res.redirect("/"));
+app.get("/", (req: Request, res: Response) => res.render("home"));
+app.get("/*", (req: Request, res: Response) => res.redirect("/"));
 
 const server = createServer(app);
 const io = new Server(server);
@@ -28,7 +28,10 @@ declare module "socket.io" {
   }
 }
 
-io.on("connection", (socket) => {
+io.on("connection", (socket: Socket) => {
+  // Set default name "Anon"
+  socket["nickname"] = "Anon";
+
   // Log events
   socket.onAny((event: string) => {
     console.log(`Socket Event: ${event}`);
@@ -55,7 +58,7 @@ io.on("connection", (socket) => {
 
   // Send bye message
   socket.on("disconnecting", () => {
-    socket.rooms.forEach((room) =>
+    socket.rooms.forEach((room: Roomname) =>
       socket.to(room).emit("bye", socket.nickname)
     );
   });

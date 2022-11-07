@@ -14,6 +14,24 @@ function addMessage(message) {
   ul.appendChild(li);
 }
 
+// Send nickname data to backend
+function handleNicknameSubmit(event) {
+  event.preventDefault();
+  const input = room.querySelector(".room-nickname input");
+  socket.emit("nickname", input.value);
+}
+
+// Send chat data to backend
+function handleMessageSubmit(event) {
+  event.preventDefault();
+  const input = room.querySelector(".room-message input");
+  const value = input.value;
+  socket.emit("new_message", roomName, input.value, () => {
+    addMessage(`You: ${value}`);
+  });
+  input.value = "";
+}
+
 // Hide main room and create chat room
 function showRoom() {
   welcome.hidden = true;
@@ -35,24 +53,6 @@ function handleRoomSubmit(event) {
   roomName = roomnameInput.value;
   roomnameInput.value = "";
   nicknameInput.value = "";
-}
-
-// Send nickname data to backend
-function handleNicknameSubmit(event) {
-  event.preventDefault();
-  const input = room.querySelector(".nickname input");
-  socket.emit("nickname", input.value);
-}
-
-// Send chat data to backend
-function handleMessageSubmit(event) {
-  event.preventDefault();
-  const input = room.querySelector(".message input");
-  const value = input.value;
-  socket.emit("new_message", roomName, input.value, () => {
-    addMessage(`You: ${value}`);
-  });
-  input.value = "";
 }
 
 welcomeForm.addEventListener("submit", handleRoomSubmit);
